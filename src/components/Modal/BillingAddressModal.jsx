@@ -1,0 +1,194 @@
+import {
+    FlatList,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+  } from "react-native";
+  import React, { memo, useCallback, useState , useEffect } from "react";
+  import {
+    Colors,
+    DEVICE_STYLES_WITH_STATUSBAR,
+    Fonts,
+    moderateScale,
+  } from "../../utils/theme";
+  import Modal from "react-native-modal";
+  import RadioButton from "../Atoms/RadioButton";
+  import BaseDevider from "../Atoms/BaseDevider";
+  import { HomeFocusedIcon } from "../../assets/icons";
+import BaseButton from "../Buttons/BaseButton";
+import { STACK_NAVIGATION_KEYS } from "../../navigation/NavigationKeys";
+  
+  const BillingAddressModal = ({
+    modalVisiblity = false,
+    handleModalVisibilty,
+    Address_list,
+    AddressSelectId,
+    toggleBillingAddressModal,
+    navigation
+  }) => {
+    const [listData, setListData] = useState([]);
+
+    useEffect(() => {
+      setListData([...Address_list]);
+    }, [Address_list]);
+
+    //  console.log('data', Address_list)
+    //  console.log('data???????', listData)
+
+    const handleRadioButtonClick = useCallback(
+      (index) => {
+        const selectedAddress = listData[index];
+
+        const updatedListData = listData.map((item, i) => {
+          return {
+            ...item,
+            selected: i === index,
+          };
+        });
+
+        setListData(updatedListData);
+        handleModalVisibilty && handleModalVisibilty();
+
+        AddressSelectId &&
+          AddressSelectId({
+            selectedId: selectedAddress.id,
+            selectedAddress: selectedAddress.address,
+          });
+      },
+      [listData, handleModalVisibilty, AddressSelectId]
+    );
+
+    const renderContain = ({ item, index }) => {
+      return (
+        <TouchableOpacity
+          key={`${index}`}
+          activeOpacity={0.6}
+          accessibilityRole={"tab"}
+          accessible={true}
+          onPress={() => handleRadioButtonClick(index)}
+          style={styles.ModalContainer}
+        >
+          <View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: moderateScale(10),
+              }}
+            >
+              <HomeFocusedIcon height={18} width={18} />
+              <Text
+                style={{
+                  fontSize: moderateScale(14),
+                  color: Colors.BLACK,
+                  fontFamily: Fonts.POPPINS_BOLD,
+                  marginTop: moderateScale(3),
+                }}
+              >
+                {item.type}
+              </Text>
+            </View>
+            <Text
+              style={{
+                marginTop: moderateScale(8),
+                fontSize: moderateScale(12),
+                color: Colors.PRIMARY_TEXT_COLOR,
+                fontFamily: Fonts.DM_SANS_REGULER,
+              }}
+            >
+              {item.address}
+            </Text>
+          </View>
+          <RadioButton isSelected={item.selected} />
+        </TouchableOpacity>
+      );
+    };
+
+    return (
+      <Modal
+        isVisible={modalVisiblity}
+        animationIn={"zoomIn"}
+        animationOut={"zoomOut"}
+        accessibilityRole={"tab"}
+        statusBarTranslucent={true}
+        deviceHeight={DEVICE_STYLES_WITH_STATUSBAR.height}
+        onBackButtonPress={handleModalVisibilty}
+        onBackdropPress={handleModalVisibilty}
+      >
+        <View style={styles.container}>
+         {listData?.length != 0 ? <Text
+            style={{
+              fontSize: moderateScale(18),
+              textAlign: "center",
+              color: Colors.SECONDARY_COLOR,
+              fontFamily: Fonts.POPPINS_MEDIUM,
+              marginVertical: moderateScale(12),
+            }}
+          >
+            Choose Delivery Address:
+          </Text> : null}
+          {listData?.length != 0 ? <BaseDevider /> : null}
+
+          <View>
+            <FlatList
+              data={listData}
+              keyExtractor={(_, index) => index.toString()}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ flexGrow: 1 }}
+              accessibilityRole={"list"}
+              ItemSeparatorComponent={() => (
+                <View
+                  style={{
+                    height: 2,
+                    width: "100%",
+                    backgroundColor: Colors.BORDER_COLOR,
+                  }}
+                />
+              )}
+              ListEmptyComponent={() => {
+                return <BaseButton onPress={() => {
+                  toggleBillingAddressModal()
+                  navigation.navigate(STACK_NAVIGATION_KEYS.ADD_NEW_ADDRESS, {id :1})
+                }} label={'+ Add Billing Address'} />
+              }}
+              renderItem={renderContain}
+            />
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+  
+  export default memo(BillingAddressModal);
+  
+  const styles = StyleSheet.create({
+    container: {
+      width: "95%",
+      // paddingHorizontal: moderateScale(20),
+      paddingVertical: moderateScale(12),
+      backgroundColor: Colors.WHITE,
+      alignSelf: "center",
+      borderRadius: moderateScale(5),
+    },
+    modalItemContainerStyle: {
+      height: moderateScale(45),
+      alignItems: "center",
+      justifyContent: "space-between",
+      flexDirection: "row",
+    },
+    labelStyle: {
+      fontFamily: Fonts.DM_SANS_REGULER,
+      fontSize: moderateScale(14),
+      color: Colors.SECONDARY_COLOR,
+      textAlign: "left",
+    },
+    ModalContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: moderateScale(20),
+      paddingVertical: moderateScale(15),
+    },
+  });
+  

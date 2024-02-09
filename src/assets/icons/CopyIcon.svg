@@ -1,0 +1,5 @@
+<svg id="copy" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <rect id="copy-2" data-name="copy" width="20" height="20" fill="none"/>
+  <path id="Vector" d="M1.667,0h7.5a1.667,1.667,0,0,1,1.667,1.667v7.5a1.667,1.667,0,0,1-1.667,1.667h-7.5A1.667,1.667,0,0,1,0,9.167v-7.5A1.667,1.667,0,0,1,1.667,0Z" transform="translate(7.5 7.5)" fill="#dbe9f5" stroke="#4a5f73" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+  <path id="Vector-2" data-name="Vector" d="M2.5,10.833H1.667A1.667,1.667,0,0,1,0,9.167v-7.5A1.667,1.667,0,0,1,1.667,0h7.5a1.667,1.667,0,0,1,1.667,1.667V2.5" transform="translate(1.667 1.667)" fill="none" stroke="#4a5f73" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+</svg>
